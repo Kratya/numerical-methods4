@@ -1,6 +1,7 @@
 #include "SNU.h"
 
-SNU::SNU(int lm, int ln, func* system, function <void(vectorD*, vectorD)> jacob, vectorD lx, double lerr, double lmaxIt, double lbetaMin)
+SNU::SNU(int lm, int ln, func* system, function <void(vector<vector<double>>&, vector<double>&)> jacob,
+	vector<double> &lx, double lerr, double lmaxIt, double lbetaMin)
 {
 	mode = 0;
 	sys = system;
@@ -12,17 +13,17 @@ SNU::SNU(int lm, int ln, func* system, function <void(vectorD*, vectorD)> jacob,
 	betaMin = lbetaMin;
 	S = new SLAE(n);
 	rx = lx;
-	Jac = new vectorD[m];
+	Jac.resize(m);
 	for (int i = 0; i < m; ++i)
 	{
-		Jac[i] = new double[n];
+		Jac[i].resize(n);
 	}
 	index = new int[m];
-	y = new double[m];
-	F = new double[m];
+	y.resize(m);
+	F.resize(m);
 }
 
-SNU::SNU(int lm, int ln, func* system, vectorD lx, double lerr, double lmaxIt, double lbetaMin, double ldx)
+SNU::SNU(int lm, int ln, func* system, vector<double> &lx, double lerr, double lmaxIt, double lbetaMin, double ldx)
 {
 	mode = 1;
 	sys = system;
@@ -35,19 +36,19 @@ SNU::SNU(int lm, int ln, func* system, vectorD lx, double lerr, double lmaxIt, d
 	dx = ldx;
 	S = new SLAE(n);
 	rx = lx;
-	Jac = new vectorD[m];
+	Jac.resize(m);
 	for (int i = 0; i < m; ++i)
 	{
-		Jac[i] = new double[n];
+		Jac[i].resize(n);
 	}
 	index = new int[m];
-	y = new double[m];
-	F = new double[m];
-	chx = new double[m];
-	chf = new double[m];
+	y.resize(m);
+	F.resize(m);
+	chx.resize(m);
+	chf.resize(m);
 }
 
-void SNU::updateF(vectorD x)
+void SNU::updateF(vector<double> &x)
 {
 	for (int i = 0; i < m; ++i)
 	{
@@ -55,7 +56,7 @@ void SNU::updateF(vectorD x)
 	}
 }
 
-void SNU::updateJAC(vectorD x)
+void SNU::updateJAC(vector<double> &x)
 {
 	if (mode == 0)
 	{
@@ -87,8 +88,8 @@ void SNU::updateJAC(vectorD x)
 void SNU::makeSlau()
 {
 	double temp;
-	vectorD* matrix = S->A;
-	vectorD b = S->b;
+	vector<vector<double>> matrix = S->A;
+	vector<double> b = S->b;
 	int minInd;
 	int count = m - n + 1;
 	for (int i = 0; i < n; ++i)
@@ -144,7 +145,7 @@ void SNU::calcSolv()
 {
 	double beta = 1;
 	double norm, norm2;
-	vectorD x = S->x;
+	vector<double> x = S->x;
 	updateF(rx);
 	updateJAC(rx);
 	norm = Norm(F, n);
@@ -189,14 +190,4 @@ void SNU::calcSolv()
 SNU::~SNU()
 {
 	delete S;
-	delete[] rx;
-	delete[] F;
-	delete[] index;
-	for (int i = 0; i < m; ++i)
-	{
-		delete[] Jac[i];
-	}
-	delete[] chx;
-	delete[] chf;
-	delete[] Jac;
 }

@@ -1,29 +1,24 @@
 #include "slae.h"
 
+using namespace std;
+
 SLAE::SLAE(int size)
 {
 	n = size;
-	A = new vectorD[n];
+	A.resize(n);
 	for (int i = 0; i < n; ++i)
 	{
-		A[i] = new double[n];
+		A[i].resize(n);
 	}
-	b = new double[n];
-	x = new double[n];
+	b.resize(n);
+	x.resize(n);
 }
 
 SLAE::~SLAE()
 {
-	for (int i = 0; i < n; ++i)
-	{
-		delete[] A[i];
-	}
-	delete[] A;
-	delete[] x;
-	delete[] b;
 }
 
-double Scal(vectorD a, vectorD b, int n)
+double Scal(vector<double> &a, vector<double> &b, int n)
 {
 	double sum = 0;
 	for (int i = 0; i < n; i++) {
@@ -32,7 +27,7 @@ double Scal(vectorD a, vectorD b, int n)
 	return sum;
 }
 
-double Norm(vectorD a, int n)
+double Norm(vector<double> &a, int n)
 {
 	return sqrt(Scal(a, a, n));
 }
@@ -40,9 +35,9 @@ double Norm(vectorD a, int n)
 bool GausSolver(SLAE* S)
 {
 	int n = S->n;
-	vectorD* matrix = S->A;
-	vectorD b = S->b;
-	vectorD x = S->x;
+	vector<vector<double>> matrix = S->A;
+	vector<double> b = S->b;
+	vector<double> x = S->x;
 	double max;
 	const double eps_gauss = 1e-14;
 	for (int k = 0; k < n; ++k)
@@ -58,7 +53,7 @@ bool GausSolver(SLAE* S)
 			}
 		}
 		{
-			double* temp = matrix[k];
+			vector<double> temp = matrix[k];
 			matrix[k] = matrix[ind];
 			matrix[ind] = temp;
 		}

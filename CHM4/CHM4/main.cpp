@@ -14,7 +14,8 @@ int main()
 	double eps, blim;
 	int maxiter;
 	fscanf_s(params, "%lf %d %lf", &eps, &maxiter, &blim);
-	vectorD x = new double[g_n];
+	vector<double> x;
+	x.resize(g_n);
 	for (int i = 0; i < g_n; ++i)
 	{
 		fscanf_s(params, "%lf", &x[i]);

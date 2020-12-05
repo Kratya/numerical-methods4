@@ -4,4 +4,4 @@
 #define test2
 extern int g_m; extern int g_n;
 func* initAllFunc();
-void jacob(vectorD* jac, vectorD x);
+void jacob(vector<vector<double>> &jac, vector<double> &x);

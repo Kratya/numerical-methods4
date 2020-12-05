@@ -7,25 +7,27 @@
 #include <algorithm>
 using namespace std;
 
-typedef function <double(vectorD)> func;
+typedef function <double(vector<double> &xt)> func;
+
 class SNU
 {
 private:
 	SLAE* S;
 	int n, m;
 	int mode;
-	vectorD rx, F, y, chx, chf;
+	vector<double> rx, F, y, chx, chf;
 	func* sys;
-	function <void(vectorD*, vectorD)> Jacobian;
+	function <void(vector<vector<double>>&, vector<double>&)> Jacobian;
 	double err, maxIt, betaMin, dx;
-	vectorD* Jac;
+	vector<vector<double>> Jac;
 	int* index;
-	void updateF(vectorD x);
-	void updateJAC(vectorD x);
+	void updateF(vector<double> &x);
+	void updateJAC(vector<double> &x);
 	void makeSlau();
 public:
-	SNU(int m, int n, func* system, function <void(vectorD*, vectorD)> jacob, vectorD x, double err, double maxIt, double betaMin);
-	SNU(int m, int n, func* system, vectorD x, double err, double maxIt, double betaMin, double dx);
+	SNU(int m, int n, func* system, function <void(vector<vector<double>>&, vector<double>&)> jacob,
+		vector<double> &x, double err, double maxIt, double betaMin);
+	SNU(int m, int n, func* system, vector<double> &x, double err, double maxIt, double betaMin, double dx);
 	void calcSolv();
 	~SNU();
 };

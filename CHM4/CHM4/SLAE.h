@@ -1,17 +1,19 @@
 #pragma once
 #include <cmath>
-typedef double* vectorD;
+#include <vector>
+
+using namespace std;
 
 class SLAE
 {
 public:
 	int n;
-	vectorD* A;
-	vectorD x;
-	vectorD b;
+	vector<vector<double>> A;
+	vector<double> x;
+	vector<double> b;
 	SLAE(int size);
 	~SLAE();
 };
-double Scal(vectorD a, vectorD b, int n);
-double Norm(vectorD a, int n);
+double Scal(vector<double> &a, vector<double> &b, int n);
+double Norm(vector<double> &a, int n);
 bool GausSolver(SLAE* S);
