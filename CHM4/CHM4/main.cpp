@@ -1,24 +1,27 @@
+#include <iostream>
+#include <fstream>
 #include "SNU.h"
 #include "tests.h"
+using namespace std;
 
 int main()
 {
-	func* funcs = initAllFunc();
-
-	FILE* params;
-	fopen_s(&params, "config.txt", "r");
-	if (params == 0)
+	funcV funcs = initAllFunc();
+	ifstream params;
+	params.open("config.txt", ios_base::in);
+	if (!params.is_open())
 	{
+		cout << "Cannot open file" << endl;
 		return 1;
 	}
 	double eps, blim;
 	int maxiter;
-	fscanf_s(params, "%lf %d %lf", &eps, &maxiter, &blim);
+	params >> eps >> maxiter >> blim;
 	vector<double> x;
 	x.resize(g_n);
 	for (int i = 0; i < g_n; ++i)
 	{
-		fscanf_s(params, "%lf", &x[i]);
+		params >> x[i];
 	}
 	SNU* S = new SNU(g_m, g_n, funcs, jacob, x, eps, maxiter, blim);
 	//SNU* S = new SNU(g_m, g_n, funcs, x, eps, maxiter, blim, 0.1);

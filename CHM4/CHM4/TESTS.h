@@ -3,5 +3,5 @@
 
 #define test2
 extern int g_m; extern int g_n;
-func* initAllFunc();
+funcV initAllFunc();
 void jacob(vector<vector<double>> &jac, vector<double> &x);

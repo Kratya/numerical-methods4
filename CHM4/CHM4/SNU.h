@@ -8,6 +8,7 @@
 using namespace std;
 
 typedef function <double(vector<double> &xt)> func;
+typedef vector<function <double(vector<double>& xt)>> funcV;
 
 class SNU
 {
@@ -16,7 +17,7 @@ private:
 	int n, m;
 	int mode;
 	vector<double> rx, F, y, chx, chf;
-	func* sys;
+	funcV sys;
 	function <void(vector<vector<double>>&, vector<double>&)> Jacobian;
 	double err, maxIt, betaMin, dx;
 	vector<vector<double>> Jac;
@@ -25,9 +26,9 @@ private:
 	void updateJAC(vector<double> &x);
 	void makeSlau();
 public:
-	SNU(int m, int n, func* system, function <void(vector<vector<double>>&, vector<double>&)> jacob,
+	SNU(int m, int n, funcV system, function <void(vector<vector<double>>&, vector<double>&)> jacob,
 		vector<double> &x, double err, double maxIt, double betaMin);
-	SNU(int m, int n, func* system, vector<double> &x, double err, double maxIt, double betaMin, double dx);
+	SNU(int m, int n, funcV system, vector<double> &x, double err, double maxIt, double betaMin, double dx);
 	void calcSolv();
 	~SNU();
 };

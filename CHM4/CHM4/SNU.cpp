@@ -1,6 +1,7 @@
 #include "SNU.h"
+#include <iostream>
 
-SNU::SNU(int lm, int ln, func* system, function <void(vector<vector<double>>&, vector<double>&)> jacob,
+SNU::SNU(int lm, int ln, funcV system, function <void(vector<vector<double>>&, vector<double>&)> jacob,
 	vector<double> &lx, double lerr, double lmaxIt, double lbetaMin)
 {
 	mode = 0;
@@ -23,7 +24,7 @@ SNU::SNU(int lm, int ln, func* system, function <void(vector<vector<double>>&, v
 	F.resize(m);
 }
 
-SNU::SNU(int lm, int ln, func* system, vector<double> &lx, double lerr, double lmaxIt, double lbetaMin, double ldx)
+SNU::SNU(int lm, int ln, funcV system, vector<double> &lx, double lerr, double lmaxIt, double lbetaMin, double ldx)
 {
 	mode = 1;
 	sys = system;
@@ -64,7 +65,8 @@ void SNU::updateJAC(vector<double> &x)
 	}
 	else
 	{
-		for (int i = 0; i < n; ++i) {
+		for (int i = 0; i < n; ++i) 
+		{
 			for (int k = 0; k < n; ++k)
 			{
 				chx[k] = x[k];
@@ -74,7 +76,8 @@ void SNU::updateJAC(vector<double> &x)
 			{
 				chf[k] = -sys[k](chx);
 			}
-			for (int j = 0; j < m; ++j) {
+			for (int j = 0; j < m; ++j)
+			{
 				Jac[j][i] = (F[j] - chf[j]) / dx;
 			}
 		}
@@ -101,11 +104,13 @@ void SNU::makeSlau()
 	}
 	sort(index, index + m, [&](const int a, const int b) {return fabs(F[a]) < fabs(F[b]); });
 	minInd = index[0];
-	for (int i = 0; i < count; ++i) {
+	for (int i = 0; i < count; ++i) 
+	{
 		if (index[i] < minInd)
 			minInd = index[i];
 	}
-	for (int i = 0; i < minInd; ++i) {
+	for (int i = 0; i < minInd; ++i) 
+	{
 		b[i] = F[i];
 		for (int im = 0; im < n; ++im)
 			matrix[i][im] = Jac[i][im];
@@ -119,7 +124,8 @@ void SNU::makeSlau()
 		}
 	}
 	int j = minInd + 1;
-	for (int i = j; i < m; ++i) {
+	for (int i = j; i < m; ++i) 
+	{
 		bool flag = true;
 		for (int k = 0; k < count; ++k)
 		{
@@ -139,13 +145,15 @@ void SNU::makeSlau()
 			++j;
 		}
 	}
+	S->A = matrix;
+	S->b = b;
 }
 
 void SNU::calcSolv()
 {
 	double beta = 1;
 	double norm, norm2;
-	vector<double> x = S->x;
+
 	updateF(rx);
 	updateJAC(rx);
 	norm = Norm(F, n);
@@ -155,9 +163,11 @@ void SNU::calcSolv()
 		makeSlau();
 		if (!GausSolver(S))
 		{
-			printf_s("SOLVE NOT FOUND\n");
+			cout << "Решение не найдено" << endl;
 			return;
 		}
+		vector<double> x = S->x;
+			
 		beta = 2;
 		do {
 			beta /= 2;
@@ -174,17 +184,22 @@ void SNU::calcSolv()
 		makeSlau();
 		norm = Norm(F, n);
 		iter++;
-		printf_s("%d:  norm = %.2le  b = %.2le \t", iter, norm, beta);
+		cout << "--------------------------------------------------" << endl;
+		cout << "N_iter = " << iter << ", NRM = " << norm << ", beta = " << beta << endl;
 		for (int i = 0; i < n; ++i)
 		{
-			printf_s("%lf\t", rx[i]);
+			cout << "X[" << i << "] = " << rx[i] << endl;
 		}
-		printf_s("\n");
+		cout << "--------------------------------------------------" << endl;
 		if (beta <= betaMin)
 		{
+			cout << "beta <= betaMin" << endl;
+			cout << "beta = " << beta << endl;
+			cout << "betaMin = " << betaMin << endl;
 			return;
 		}
 	}
+	cout << "End while" << endl;
 }
 
 SNU::~SNU()

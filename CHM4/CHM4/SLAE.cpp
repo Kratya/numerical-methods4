@@ -21,7 +21,8 @@ SLAE::~SLAE()
 double Scal(vector<double> &a, vector<double> &b, int n)
 {
 	double sum = 0;
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) 
+	{
 		sum += a[i] * b[i];
 	}
 	return sum;
@@ -62,15 +63,19 @@ bool GausSolver(SLAE* S)
 			b[k] = b[ind];
 			b[ind] = temp;
 		}
-		for (int i = k; i < n; i++) {
+		for (int i = k; i < n; i++) 
+		{
 			double temp = matrix[i][k];
-			if (fabs(temp) > eps_gauss) {
-				for (int j = 0; j < n; j++) {
+			if (fabs(temp) > eps_gauss) 
+			{
+				for (int j = 0; j < n; j++)
+				{
 					matrix[i][j] = matrix[i][j] / temp;
 				}
 				b[i] = b[i] / temp;
 				if (i != k) {
-					for (int j = 0; j < n; j++) {
+					for (int j = 0; j < n; j++)
+					{
 						matrix[i][j] = matrix[i][j] - matrix[k][j];
 					}
 					b[i] = b[i] - b[k];
@@ -85,9 +90,13 @@ bool GausSolver(SLAE* S)
 	for (int k = n - 1; k >= 0; --k)
 	{
 		x[k] = b[k];
-		for (int i = 0; i < k; i++) {
+		for (int i = 0; i < k; i++)
+		{
 			b[i] = b[i] - matrix[i][k] * x[k];
 		}
 	}
+	S->A = matrix;
+	S->b = b;
+	S->x = x;
 	return true;
 }
