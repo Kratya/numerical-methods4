@@ -6,6 +6,7 @@ using namespace std;
 
 int main()
 {
+	setlocale(LC_ALL, "Russian");
 	funcV funcs = initAllFunc();
 	ifstream params;
 	params.open("config.txt", ios_base::in);

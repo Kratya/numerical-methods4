@@ -94,7 +94,8 @@ void SNU::makeSlau()
 	vector<vector<double>> matrix = S->A;
 	vector<double> b = S->b;
 	int minInd;
-	int count = m - n + 1;
+	//int count = m - n + 1;
+	int count = m - n;
 	for (int i = 0; i < n; ++i)
 	{
 		for (int j = 0; j < n; ++j)
@@ -109,12 +110,14 @@ void SNU::makeSlau()
 		if (index[i] < minInd)
 			minInd = index[i];
 	}
+	/*
 	for (int i = 0; i < minInd; ++i) 
 	{
 		b[i] = F[i];
 		for (int im = 0; im < n; ++im)
 			matrix[i][im] = Jac[i][im];
 	}
+	
 	b[minInd] = 0;
 	for (int i = 0; i < count; ++i) {
 		b[minInd] += F[index[i]] * F[index[i]];
@@ -123,7 +126,9 @@ void SNU::makeSlau()
 			matrix[minInd][jm] += 2 * F[index[i]] * Jac[index[i]][jm];
 		}
 	}
-	int j = minInd + 1;
+	*/
+	//int j = minInd + 1;
+	int j = 0;
 	for (int i = j; i < m; ++i) 
 	{
 		bool flag = true;
